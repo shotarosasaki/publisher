@@ -1,0 +1,4 @@
+・applicationパッケージのインタフェース（service）
+・infrastructureパッケージのインタフェース（repository）
+・構造体定義
+・他構造体に付随する共通処理
