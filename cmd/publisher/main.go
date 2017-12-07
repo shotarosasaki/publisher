@@ -1,13 +1,16 @@
 package main
 
 import (
+	"context"
 	"flag"
-	"os"
 	"fmt"
+	"os"
+
+	"github.com/shotarosasaki/publisher/interfaces"
 )
 
 var (
-configPath = flag.String("f", "/etc/publisher/publisher.toml", "specify a path to configuration file")
+	configPath = flag.String("f", "/etc/publisher/publisher.toml", "specify a path to configuration file")
 )
 
 func main() {
@@ -18,8 +21,8 @@ func realMain() (exitCode int) {
 	defer func() {
 		err := recover()
 		if err != nil {
-			fmt.Printf("Panic occured. %v", err)	// TODO メッセージ見直し
-			exitCode = -1	// TODO k8sと絡めた時に、プロセス落とすでよい？
+			fmt.Printf("Panic occured. %v", err) // TODO メッセージ見直し
+			exitCode = -1                        // TODO k8sと絡めた時に、プロセス落とすでよい？
 		}
 	}()
 	return wrappedMain()
@@ -27,6 +30,12 @@ func realMain() (exitCode int) {
 
 func wrappedMain() int {
 	flag.Parse()
+
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	h := &interfaces.Handler{}
+	h.Start(ctx)
 
 	return 0
 }
