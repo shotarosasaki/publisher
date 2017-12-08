@@ -3,13 +3,22 @@ package interfaces
 import (
 	"context"
 	"net/http"
+
+	"github.com/shotarosasaki/publisher/config"
+	"github.com/shotarosasaki/publisher/global"
+	"go.uber.org/zap"
 )
 
 type Handler struct {
-	// TODO インフラ周りへのコネクション？
+	cfg *config.Config
+}
+
+func NewHandler(cfg *config.Config) *Handler {
+	return &Handler{cfg: cfg}
 }
 
 func (h *Handler) Start(context context.Context) error {
+	global.Logger.Debug("Start", zap.String("key", "val"))
 	go func() {
 		// メインゴルーチンからのキャンセル通知を受けてWebサーバ停止
 		// TODO いる？
@@ -24,7 +33,7 @@ func (h *Handler) Start(context context.Context) error {
 		res.Write([]byte("pong"))
 	})
 
-	err := http.ListenAndServe(":12345", nil)
+	err := http.ListenAndServe(h.cfg.Listen, nil)
 	if err != nil {
 		return err
 	}
