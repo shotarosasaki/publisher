@@ -1,16 +1,14 @@
 package main
 
 import (
-	"context"
 	"flag"
 	"fmt"
 	"os"
 
+	"github.com/shotarosasaki/publisher"
 	"github.com/shotarosasaki/publisher/config"
 	"github.com/shotarosasaki/publisher/global"
 	"go.uber.org/zap"
-
-	"github.com/shotarosasaki/publisher/interfaces"
 )
 
 var (
@@ -45,11 +43,7 @@ func wrappedMain() int {
 
 	global.InitLogger(conf.Log)
 
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
-
-	h := interfaces.NewHandler(conf)
-	if err := h.Start(ctx); err != nil {
+	if err := publisher.Serve(conf); err != nil {
 		global.Logger.Error("xxxx", zap.Error(err))
 		// TODO exitCodeを定数定義
 		return -1
