@@ -13,7 +13,12 @@ import (
 type customHandler interface {
 	// TODO I/F検討
 	// TODO バリデーションを含めるかメソッド分けるか検討
-	ParseRequest(r *http.Request)
+	ParseRequest(r *http.Request) (customResponse, error)
+}
+
+type customResponse interface {
+	getAttribute() map[string]string
+	getBody() []byte
 }
 
 func CreateHandlerFunc(c customHandler, cfg *config.Config) func(http.ResponseWriter, *http.Request) {
@@ -27,17 +32,19 @@ func CreateHandlerFunc(c customHandler, cfg *config.Config) func(http.ResponseWr
 		// TODO UUID生成
 
 		// TODO リクエストパーサーのI/F見直し！（パース後の型を定義して、その結果に対して後続処理！）
-		c.ParseRequest(r)
+		parsed, err := c.ParseRequest(r)
+		if err != nil {
+			// TODO エラーログ
+			// TODO エラー用レスポンス
+			return
+		}
 
 		// TODO パース・バリデーションまで終わったらその時点でレスポンス返すようにする！
 		// TODO 以降のCloudPubSubへの送信はゴルーチン内で行う！
 
-		// TODO とりあえずべたで
-		data := []byte("Hello world !!!")
-		attributes := map[string]string{"Type": "text"}
 		in := &domain.PublishInput{
-			Data:       data,
-			Attributes: attributes,
+			Data:       parsed.getBody(),
+			Attributes: parsed.getAttribute(),
 		}
 		out, err := pub.Publish(in)
 		if err != nil {
