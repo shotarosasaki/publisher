@@ -1,14 +1,16 @@
 package interfaces
 
-import (
-	"net/http"
+import "net/http"
 
-	"github.com/shotarosasaki/publisher/static"
-)
+type TwitterWebhookHandler struct {
+	// TODO 必要に応じてフィールド追加
+}
 
-// TODO 実装！
-func TwitterWebhookHandler(res http.ResponseWriter, req *http.Request) {
-	res.WriteHeader(http.StatusOK)
-	res.Header().Set(static.HttpHeaderContentType, static.ContentTypeJson)
-	res.Write([]byte("twitter"))
+// TODO 必要に応じて引数追加
+func NewTwitterWebhookHandler() *TwitterWebhookHandler {
+	return &TwitterWebhookHandler{}
+}
+
+func (h *TwitterWebhookHandler) ParseRequest(r *http.Request) {
+	// TODO 実装！
 }

@@ -3,3 +3,8 @@ listen = ":10080"
 [log]
   level = "debug"
   appName = "publisher"
+
+[queue]
+  credentialsPath = ""
+  projectID = ""
+  topicName = ""

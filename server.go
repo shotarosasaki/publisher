@@ -15,12 +15,11 @@ func Serve(cfg *config.Config) error {
 
 	http.HandleFunc(static.RoutingPathPing, interfaces.PingHandler)
 
-	// TODO 設定ファイル等で使うハンドラーを制御するか検討！
-	http.HandleFunc(static.RoutingPathFacebookWebhook, interfaces.FacebookWebhookHandler)
-	http.HandleFunc(static.RoutingPathTwitterWebhook, interfaces.TwitterWebhookHandler)
+	// TODO ここですべて定義せず、設定ファイル等に記載した内容に応じて使うハンドラーを制御するかどうかも検討！
+	http.HandleFunc(static.RoutingPathFacebookWebhook, interfaces.CreateHandlerFunc(interfaces.NewFacebookWebhookHandler(), cfg))
+	http.HandleFunc(static.RoutingPathTwitterWebhook, interfaces.CreateHandlerFunc(interfaces.NewTwitterWebhookHandler(), cfg))
 
-	err := http.ListenAndServe(cfg.Listen, nil)
-	if err != nil {
+	if err := http.ListenAndServe(cfg.Listen, nil); err != nil {
 		return err
 	}
 

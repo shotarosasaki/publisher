@@ -4,14 +4,23 @@ import (
 	"github.com/spf13/viper"
 )
 
+// TODO インフラレイヤーの切り替えを考慮して設定ファイルもインフラ関連を分けることを検討！
+
 type Config struct {
 	Listen string `mapstructure:"listen"`
 	Log    *LogConfig
+	Queue  *QueueConfig
 }
 
 type LogConfig struct {
 	Level   string
 	AppName string
+}
+
+type QueueConfig struct {
+	CredentialsPath string
+	ProjectID       string
+	TopicName       string
 }
 
 func New(path string) (*Config, error) {

@@ -1,13 +1,16 @@
 package interfaces
 
-import (
-	"net/http"
+import "net/http"
 
-	"github.com/shotarosasaki/publisher/static"
-)
+type FacebookWebhookHandler struct {
+	// TODO 必要に応じてフィールド追加
+}
 
-func FacebookWebhookHandler(res http.ResponseWriter, req *http.Request) {
-	res.WriteHeader(http.StatusOK)
-	res.Header().Set(static.HttpHeaderContentType, static.ContentTypeJson)
-	res.Write([]byte("facebook"))
+// TODO 必要に応じて引数追加
+func NewFacebookWebhookHandler() *FacebookWebhookHandler {
+	return &FacebookWebhookHandler{}
+}
+
+func (h *FacebookWebhookHandler) ParseRequest(r *http.Request) {
+	// TODO 実装！
 }

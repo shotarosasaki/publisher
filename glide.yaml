@@ -1,5 +1,9 @@
 package: github.com/shotarosasaki/publisher
 import:
+- package: cloud.google.com/go
+  version: ~0.16.0
+  subpackages:
+  - pubsub
 - package: github.com/spf13/viper
   version: ~1.0.0
 - package: go.uber.org/zap
